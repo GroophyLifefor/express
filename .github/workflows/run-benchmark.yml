@@ -79,7 +79,7 @@ jobs:
 
       - name: Build HTML report
         run: |
-          node benchmark/build-report.mjs \
+          node express-head/benchmark/build-report.mjs \
             --baseline "$RUNNER_TEMP/base.json" \
             --current "$RUNNER_TEMP/head.json" \
             --template perf-wg/dashboards/index.html \
