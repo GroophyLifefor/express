@@ -92,23 +92,35 @@ jobs:
           name: pr-load-report
           path: ${{ runner.temp }}/report.html
 
+      - name: Build summary table
+        run: |
+          node express-head/benchmark/compare-table.mjs \
+            --baseline "$RUNNER_TEMP/base.json" \
+            --current "$RUNNER_TEMP/head.json" > "$RUNNER_TEMP/summary.md"
+          cat "$RUNNER_TEMP/summary.md"
+
       - name: Comment on PR
         uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs')
             const path = require('path')
-            const file = path.join(process.env.RUNNER_TEMP, 'compare.txt')
-            const raw = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : 'compare output not found'
-            const out = raw.replace(/\x1b\[[0-9;]*m/g, '').trim()
+            const read = (name, fallback) => {
+              const p = path.join(process.env.RUNNER_TEMP, name)
+              return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : fallback
+            }
+            const summary = read('summary.md', 'summary not found').trim()
+            const cli = read('compare.txt', '').replace(/\x1b\[[0-9;]*m/g, '').trim()
             const runUrl = `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             const body = [
               '## PR load test — base vs head',
               '',
+              summary,
+              '',
               '<details><summary>CLI output</summary>',
               '',
               '```',
-              out,
+              cli,
               '```',
               '',
               '</details>',
