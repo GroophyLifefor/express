@@ -42,19 +42,19 @@ jobs:
 
       - name: Pack express (head + base)
         run: |
-          npm pack ./express-head --pack-destination "$RUNNER_TEMP"
-          mv "$RUNNER_TEMP"/express-*.tgz "$RUNNER_TEMP"/express-head.tgz
-          npm pack ./express-base --pack-destination "$RUNNER_TEMP"
-          mv "$RUNNER_TEMP"/express-*.tgz "$RUNNER_TEMP"/express-base.tgz
-          ls -l "$RUNNER_TEMP"/*.tgz
+          mkdir -p "$RUNNER_TEMP/pack-head" "$RUNNER_TEMP/pack-base"
+          npm pack ./express-head --pack-destination "$RUNNER_TEMP/pack-head"
+          npm pack ./express-base --pack-destination "$RUNNER_TEMP/pack-base"
+          ls -l "$RUNNER_TEMP"/pack-*/*.tgz
 
       - name: Load test (PR head)
         working-directory: perf-wg
         run: |
+          HEAD_TGZ="$(ls "$RUNNER_TEMP"/pack-head/*.tgz)"
           NODE_VER="$(node -p 'process.versions.node')"
           npm run load -- \
             --test=@expressjs/perf-load-example \
-            --overrides="{\"express\":\"file:$RUNNER_TEMP/express-head.tgz\"}" \
+            --overrides="{\"express\":\"file:$HEAD_TGZ\"}" \
             --node="$NODE_VER" \
             --duration=10 \
             --output "$RUNNER_TEMP/head.json"
@@ -62,10 +62,11 @@ jobs:
       - name: Load test (PR base)
         working-directory: perf-wg
         run: |
+          BASE_TGZ="$(ls "$RUNNER_TEMP"/pack-base/*.tgz)"
           NODE_VER="$(node -p 'process.versions.node')"
           npm run load -- \
             --test=@expressjs/perf-load-example \
-            --overrides="{\"express\":\"file:$RUNNER_TEMP/express-base.tgz\"}" \
+            --overrides="{\"express\":\"file:$BASE_TGZ\"}" \
             --node="$NODE_VER" \
             --duration=10 \
             --output "$RUNNER_TEMP/base.json"
