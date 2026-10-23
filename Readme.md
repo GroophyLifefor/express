@@ -31,6 +31,7 @@
 [![Linux Build][github-actions-ci-image]][github-actions-ci-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
 [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://app.codspeed.io/GroophyLifefor/express?utm_source=badge)
 
 
 ```js
@@ -173,6 +174,16 @@ Then run `npm test`:
 ```bash
 npm test
 ```
+
+Performance benchmarks live in `benchmark/` and are written with
+[tinybench](https://github.com/tinylibs/tinybench) (requires Node.js 20 or later). Run them with:
+
+```bash
+npm run bench
+```
+
+They are also measured continuously on every pull request with
+[CodSpeed](https://codspeed.io).
 
 ## Current project team members
 

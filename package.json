@@ -62,6 +62,7 @@
     "vary": "^1.1.2"
   },
   "devDependencies": {
+    "@codspeed/tinybench-plugin": "^6.1.0",
     "after": "0.8.2",
     "autocannon": "^8.0.0",
     "connect-redis": "^8.0.1",
@@ -78,6 +79,7 @@
     "nyc": "^17.1.0",
     "pbkdf2-password": "1.2.1",
     "supertest": "^6.3.0",
+    "tinybench": "^6.2.2",
     "vhost": "~3.0.2"
   },
   "engines": {
@@ -95,6 +97,7 @@
     "test": "mocha --require test/support/env --reporter spec --check-leaks test/ test/acceptance/",
     "test-ci": "nyc --exclude examples --exclude test --exclude benchmarks --reporter=lcovonly --reporter=text npm test",
     "test-cov": "nyc --exclude examples --exclude test --exclude benchmarks --reporter=html --reporter=text npm test",
-    "test-tap": "mocha --require test/support/env --reporter tap --check-leaks test/ test/acceptance/"
+    "test-tap": "mocha --require test/support/env --reporter tap --check-leaks test/ test/acceptance/",
+    "bench": "node benchmark/index.mjs"
   }
 }

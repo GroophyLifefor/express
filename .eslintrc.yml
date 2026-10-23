@@ -12,3 +12,7 @@ rules:
     - error
     - name: Buffer
       message: Use `import { Buffer } from "node:buffer"` instead of the global Buffer.
+overrides:
+  - files: ["*.mjs"]
+    parserOptions:
+      sourceType: module
